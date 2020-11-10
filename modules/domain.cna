@@ -1,0 +1,50 @@
+# 一些命令记录
+
+menu "域控内网" {
+    item "查询当前域环境" {
+        btask($1, "=====DC=====", "");
+        bshell($1, "net config workstation");
+    }
+
+    item "" {
+        btask($1, "=====DC=====", "");
+        bshell($1, "");
+    }
+
+    item "查询域内用户" {
+        btask($1, "=====DC=====", "");
+        bshell($1, "net user /domain");
+    }
+
+    item "查询域内用户详细" {
+        btask($1, "=====DC=====", "");
+        bshell($1, "wmic useraccount get /all")
+    }
+
+    item "查询域管理员" {
+        btask($1, "=====DC=====", "");
+        bshell($1, "net group \"domain admins\" /domain");
+    }
+
+    item "查询域控机器名" {
+        btask($1, "=====DC=====", "");
+        bshell($1, "nltest /DCLIST:XXX");
+    }
+
+    item "查询域控制主机名" {
+        btask($1, "=====DC=====", "");
+        bshell($1, "nslookup -type=SRV _ldap._tcp");
+    }
+
+    item "SPN查询" {
+        btask($1, "=====DC=====", "");
+        bshell($1, "setspn -T xxx.com -Q */*  ");
+    }
+
+    item "域传输" {
+        btask($1, "=====DC=====", "");
+        bshell($1, "nslookup -type ns xxx.com");
+        
+    }
+
+} 

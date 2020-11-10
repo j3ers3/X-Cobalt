@@ -1,0 +1,15 @@
+menu "其他操作" {
+
+    item "RAR打包" {
+        btask($1, "Tips: C:\\Program Files (x86)\\winrar\\rar.exe a -k -r -s -m1 C:\\bak.rar C:\\网站源码", "");
+    }
+
+    item "数据库备份" {
+
+    }
+
+    item "开启3389" {
+
+    }
+
+}

@@ -1,0 +1,83 @@
+# 一些命令记录
+
+menu "信息收集" {
+
+    item "历史命令" {
+        btask($1, "=====Powershell历史记录=====", "");
+        bshell($1, "type %APPDATA%\\Microsoft\\Windows\\PowerShell\\PSReadLine\\ConsoleHost_history.txt");
+
+        btask($1, "=====CMD历史记录=====", "");
+        bshell($1, "doskey /history");
+    }
+
+
+    item "网络连接" {
+        btask($1, "=====Connection=====", "");
+        bshell($1, "netstat -ano | findstr LISTENING");
+    }
+
+
+    item "软件列表" {
+        btask($1, "=====Software=====", "");
+        bshell($1, "wmic product get name,version");
+    }
+
+
+    item "查看启动项" {
+        btask($1, "=====Startup process=====", "");
+        bshell($1, "wmic startup get command,caption");
+    }
+
+
+    item "查看计划任务" {
+        btask($1, "=====计划任务=====", "");
+        bshell($1, "schtasks /query /fo LIST /v");
+    }
+
+
+    item "查看补丁" {
+        btask($1, "=====Hotfix=====", "");
+        bshell($1, "wmic qfe get Caption,Description,HotFixID,InstalledOn");
+    }
+
+
+    item "防火墙配置" {
+        btask($1, "=====Firewall=====", "");
+        bshell($1, "netsh firewall show config");
+    }
+
+
+    item "驱动器" {
+        btask($1, "=====LogicalDisk=====", "");
+        bshell($1, "wmic logicaldisk get caption,description,providername");
+    }
+
+
+    item "查看服务" {
+        btask($1, "=====Tasklist=====", "");
+        bshell($1, "tasklist /svc");
+    }
+
+
+    item "查看运行进程" {
+        btask($1, "=====运行的进程=====", "");
+        bshell($1, "wmic process get caption,executablepath,commandline");
+    }
+
+
+    item "查看用户在线" {
+        btask($1, "=====Quser=====", "");
+        bshell($1, "quser");
+    }
+
+
+    item "查看路由表" {
+        bshell($1, "route print");
+    }
+
+
+    item "文件浏览历史" {
+        btask($1, "=====文件浏览历史=====", "");
+        bshell($1, "dir %APPDATA%\\Microsoft\\Windows\\Recent")
+    }
+}
