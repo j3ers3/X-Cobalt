@@ -1,7 +1,7 @@
 # ⚡️ Aggressor Script
 编写[Cobalt Strike](https://www.cobaltstrike.com/)插件来更自动化。
 
-![xxx] (./pic/pic.png)
+![xxx](pic/pic.png)
 
 ### 娱乐项目
 - 全屏开IE
